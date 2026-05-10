@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>wb_-hospital.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,10 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Clases\ClassConexionBD.cs" />
-    <Compile Include="Clases\ClassConsulta.cs" />
-    <Compile Include="Clases\ClassEspecialidad.cs" />
-    <Compile Include="Clases\ClassMedico.cs" />
+    <Compile Include="Clases\Archivo.cs" />
+    <Compile Include="Clases\ConexionBD.cs" />
+    <Compile Include="Clases\Especialidad.cs" />
+    <Compile Include="Clases\Medico.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,6 +91,7 @@
     <Content Include="BD\SaludBD.accdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="wb_-hospital.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

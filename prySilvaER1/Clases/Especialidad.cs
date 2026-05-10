@@ -6,16 +6,22 @@ using System.Threading.Tasks;
 
 namespace prySilvaER1.Clases
 {
-    internal class ClassEspecialidad
+    public class Especialidad
     {
         //Atributos
         public string Nombre { get; set; }
-        public string Descripcion { get; set; }
+        public string Numero { get; set; }
+        
         //Constructor
-        public ClassEspecialidad(string nombre, string descripcion)
+        public Especialidad()
+        {
+            Nombre = "";
+            Numero = "";
+        }
+        public Especialidad(string nombre, string numero)
         {
             Nombre = nombre;
-            Descripcion = descripcion;
+            Numero = numero;
         }
     }
 }
