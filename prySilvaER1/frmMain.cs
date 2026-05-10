@@ -1,4 +1,5 @@
-﻿using System;
+﻿using prySilvaER1.Clases;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,170 +8,207 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace prySilvaER1
 {
     public partial class frmMain : Form
     {
-        // Models
-        class Especialidad
-        {
-            public int Numero { get; set; }
-            public string Nombre { get; set; }
-
-            public override string ToString()
-            {
-                return Nombre;
-            }
-        }
-
-        class Medico
-        {
-            public int Matricula { get; set; }
-            public string Nombre { get; set; }
-            public int EspecialidadNumero { get; set; }
-        }
-
-        // Data storage (in-memory)
-        private List<Especialidad> especialidades = new List<Especialidad>();
-        private List<Medico> medicos = new List<Medico>();
-
         public frmMain()
         {
             InitializeComponent();
         }
 
+        private const string PATH_ARCHIVO_ESPECIALIDADES = "Especialidades.txt";
+        private const string PATH_ARCHIVO_MEDICOS = "Medicos.txt";
+
+
+        // GroupBox Especialidades
+        private void btnAgregarE_Click(object sender, EventArgs e)
+        {
+            if (ValidarEspecialidad())
+            {
+                Especialidad nuevaEsp = CrearEspecialidad();
+
+                Archivo EspecialidadesForm = new Archivo();
+                EspecialidadesForm.NombreArchivo = PATH_ARCHIVO_ESPECIALIDADES;
+                EspecialidadesForm.AgregarEspecialidad(nuevaEsp);
+                
+                cmbEspecialidad.Items.Add(nuevaEsp.Nombre);
+                cmbEspecialidad.SelectedIndex = 0;
+                cmbConsulta.Items.Add(nuevaEsp.Nombre);
+                cmbConsulta.SelectedIndex = 0;
+                txtNumero.Text = "";
+                txtNombreE.Text = "";
+            }
+            else
+            {
+                MessageBox.Show("Datos vacíos o ya existentes.", "Error", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private bool ValidarEspecialidad()
+        {
+            bool resultado = false;
+
+            if (txtNumero.Text != "")
+            {
+                if (txtNombreE.Text != "")
+                {
+                    Archivo EspecialidadForm = new Archivo();
+                    EspecialidadForm.NombreArchivo = PATH_ARCHIVO_ESPECIALIDADES;
+                    // controla que no se repita el número de especialidad
+                    if (EspecialidadForm.BuscarNumero(txtNumero.Text) == false)
+                    {
+                        resultado = true;
+                    }
+                }
+            }
+            return resultado;
+        }
+
+        private Especialidad CrearEspecialidad()
+        {
+            Especialidad nuevaEsp = new Especialidad();
+
+            nuevaEsp.Numero = txtNumero.Text;
+            nuevaEsp.Nombre = txtNombreE.Text;
+
+            return nuevaEsp;
+        }
+
+        private void txtNumero_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // aceptar solo expresiones numéricas con decimales
+            if (!Char.IsNumber(e.KeyChar) && e.KeyChar != ',' && e.KeyChar != (int)Keys.Back)
+            {
+                e.Handled = true;
+            }
+
+            if (e.KeyChar == ',' && txtNumero.Text.Contains(","))
+            {
+                e.Handled = true;
+            }
+        }
+        
+        
+        // GroupBox Médicos
+        private void btnAgregarM_Click(object sender, EventArgs e)
+        {
+            if (ValidarMedico())
+            {
+                Medico nuevoMed = CrearMedico();
+
+                Archivo MedicosForm = new Archivo();
+                MedicosForm.NombreArchivo = PATH_ARCHIVO_MEDICOS;
+                MedicosForm.AgregarMedico(nuevoMed);
+
+                txtMatricula.Text = "";
+                txtNombreM.Text = "";
+                cmbEspecialidad.SelectedIndex = -1;
+            }
+            else
+            {
+                MessageBox.Show("Datos vacíos o ya existentes.", "Error", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private bool ValidarMedico()
+        {
+            bool resultado = false;
+
+            if (txtMatricula.Text != "")
+            {
+                if (txtNombreM.Text != "")
+                {
+                    if (cmbEspecialidad.SelectedIndex != -1)
+                    {
+                        Archivo MedicosForm = new Archivo();
+                        MedicosForm.NombreArchivo = PATH_ARCHIVO_MEDICOS;
+                        // controla que no se repita el número de matrícula
+                        if (MedicosForm.BuscarNumero(txtMatricula.Text) == false)
+                        {
+                            resultado = true;
+                        }
+                    }
+                }
+            }
+            return resultado;
+        }
+
+        private Medico CrearMedico()
+        {
+            Medico nuevoMed = new Medico();
+
+            nuevoMed.Matricula = txtMatricula.Text;
+            nuevoMed.Nombre = txtNombreM.Text;
+            nuevoMed.Especialidad = cmbEspecialidad.SelectedItem.ToString();
+
+            return nuevoMed;
+        }
+
+        private void txtMatricula_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // aceptar solo expresiones numéricas con decimales
+            if (!Char.IsNumber(e.KeyChar) && e.KeyChar != ',' && e.KeyChar != (int)Keys.Back)
+            {
+                e.Handled = true;
+            }
+
+            if (e.KeyChar == ',' && txtNumero.Text.Contains(","))
+            {
+                e.Handled = true;
+            }
+        }
+
+
+        // GroupBox Consulta
+        private void btnConsultar_Click(object sender, EventArgs e)
+        {
+            if (!File.Exists(Application.StartupPath + "\\" + PATH_ARCHIVO_MEDICOS))
+            {
+                MessageBox.Show("No hay datos para mostrar", "Consulta",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            Archivo MedicosForm = new Archivo();
+            MedicosForm.NombreArchivo = PATH_ARCHIVO_MEDICOS;
+            List<Medico> listaMedicos = MedicosForm.ObtenerMedicosOrdenados();
+            dgvConsulta.Rows.Clear();
+
+            foreach (Medico med in listaMedicos)
+            {
+                if (med.Especialidad == cmbConsulta.SelectedItem.ToString())
+                {
+                    dgvConsulta.Rows.Add(med.Matricula, med.Nombre);
+                }
+            }
+        }
+
         private void frmMain_Load(object sender, EventArgs e)
         {
-            // Optionally preload some data
-            // Bind combo boxes
-            RefreshEspecialidadesCombos();
+            string Linea;
+            string NombreEnArchivo;
 
-            // Prepare DataGridView columns
-            dgvMedicos.AutoGenerateColumns = false;
-            dgvMedicos.Columns.Clear();
-            dgvMedicos.Columns.Add(new DataGridViewTextBoxColumn() { Name = "Matricula", HeaderText = "Matrícula", DataPropertyName = "Matricula", Width = 80 });
-            dgvMedicos.Columns.Add(new DataGridViewTextBoxColumn() { Name = "Nombre", HeaderText = "Nombre", DataPropertyName = "Nombre", Width = 150 });
-        }
-
-        private void RefreshEspecialidadesCombos()
-        {
-            // For medicos entry
-            cmbMedEspecialidad.DataSource = null;
-            cmbMedEspecialidad.DataSource = especialidades.ToList();
-            cmbMedEspecialidad.DisplayMember = "Nombre";
-            cmbMedEspecialidad.ValueMember = "Numero";
-
-            // For consulta
-            cmbEspecialidadesConsulta.DataSource = null;
-            cmbEspecialidadesConsulta.DataSource = especialidades.ToList();
-            cmbEspecialidadesConsulta.DisplayMember = "Nombre";
-            cmbEspecialidadesConsulta.ValueMember = "Numero";
-        }
-
-        private void btnAgregarEspecialidad_Click(object sender, EventArgs e)
-        {
-            // Validations
-            if (string.IsNullOrWhiteSpace(txtEspecialidadId.Text))
+            if (PATH_ARCHIVO_ESPECIALIDADES != "" && File.Exists(PATH_ARCHIVO_ESPECIALIDADES))
             {
-                MessageBox.Show("Ingrese número de especialidad.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                StreamReader sr = new StreamReader(PATH_ARCHIVO_ESPECIALIDADES); // Abrir
+
+                while (sr.EndOfStream == false)
+                {
+                    Linea = sr.ReadLine(); // Leer
+
+                    NombreEnArchivo = Linea.Split(',')[1];
+
+                    cmbEspecialidad.Items.Add(NombreEnArchivo);
+                    cmbConsulta.Items.Add(NombreEnArchivo);
+                }
+                sr.Close(); // Cerrar
+                sr.Dispose();
             }
-
-            if (!int.TryParse(txtEspecialidadId.Text.Trim(), out int numero))
-            {
-                MessageBox.Show("Número de especialidad inválido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            string nombre = txtEspecialidadNombre.Text?.Trim();
-            if (string.IsNullOrWhiteSpace(nombre))
-            {
-                MessageBox.Show("Ingrese nombre de la especialidad.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (especialidades.Any(x => x.Numero == numero))
-            {
-                MessageBox.Show("Número de especialidad repetido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            especialidades.Add(new Especialidad() { Numero = numero, Nombre = nombre });
-            RefreshEspecialidadesCombos();
-
-            txtEspecialidadId.Clear();
-            txtEspecialidadNombre.Clear();
-            txtEspecialidadId.Focus();
-        }
-
-        private void btnAgregarMedico_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtMatricula.Text))
-            {
-                MessageBox.Show("Ingrese matrícula del médico.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (!int.TryParse(txtMatricula.Text.Trim(), out int matricula))
-            {
-                MessageBox.Show("Matrícula inválida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            string nombre = txtMedicoNombre.Text?.Trim();
-            if (string.IsNullOrWhiteSpace(nombre))
-            {
-                MessageBox.Show("Ingrese nombre del médico.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (cmbMedEspecialidad.SelectedItem == null)
-            {
-                MessageBox.Show("Seleccione una especialidad para el médico.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            int especialidadNumero = ((Especialidad)cmbMedEspecialidad.SelectedItem).Numero;
-
-            if (medicos.Any(m => m.Matricula == matricula))
-            {
-                MessageBox.Show("Matrícula de médico repetida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            medicos.Add(new Medico() { Matricula = matricula, Nombre = nombre, EspecialidadNumero = especialidadNumero });
-
-            txtMatricula.Clear();
-            txtMedicoNombre.Clear();
-            cmbMedEspecialidad.SelectedIndex = -1;
-            txtMatricula.Focus();
-
-            // If currently selected consult specialty matches, refresh grid
-            if (cmbEspecialidadesConsulta.SelectedItem != null && ((Especialidad)cmbEspecialidadesConsulta.SelectedItem).Numero == especialidadNumero)
-            {
-                PopulateMedicosGrid(especialidadNumero);
-            }
-        }
-
-        private void cmbEspecialidadesConsulta_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cmbEspecialidadesConsulta.SelectedItem == null)
-            {
-                dgvMedicos.DataSource = null;
-                return;
-            }
-
-            int numero = ((Especialidad)cmbEspecialidadesConsulta.SelectedItem).Numero;
-            PopulateMedicosGrid(numero);
-        }
-
-        private void PopulateMedicosGrid(int especialidadNumero)
-        {
-            var lista = medicos.Where(m => m.EspecialidadNumero == especialidadNumero)
-                               .Select(m => new { m.Matricula, m.Nombre })
-                               .ToList();
-            dgvMedicos.DataSource = lista;
         }
     }
 }
