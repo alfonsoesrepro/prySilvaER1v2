@@ -44,16 +44,28 @@
             this.lblMedicoNombre = new System.Windows.Forms.Label();
             this.lblMatricula = new System.Windows.Forms.Label();
             this.groupBoxConsulta = new System.Windows.Forms.GroupBox();
+            this.btnConsultar = new System.Windows.Forms.Button();
             this.dgvConsulta = new System.Windows.Forms.DataGridView();
             this.clmMatricula = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.clmNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cmbConsulta = new System.Windows.Forms.ComboBox();
             this.lblConsulta = new System.Windows.Forms.Label();
-            this.btnConsultar = new System.Windows.Forms.Button();
+            this.tcMain = new System.Windows.Forms.TabControl();
+            this.tpEspecialidades = new System.Windows.Forms.TabPage();
+            this.tpMedicos = new System.Windows.Forms.TabPage();
+            this.tpConsulta = new System.Windows.Forms.TabPage();
+            this.pbLogo = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBoxEspecialidades.SuspendLayout();
             this.groupBoxMedicos.SuspendLayout();
             this.groupBoxConsulta.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvConsulta)).BeginInit();
+            this.tcMain.SuspendLayout();
+            this.tpEspecialidades.SuspendLayout();
+            this.tpMedicos.SuspendLayout();
+            this.tpConsulta.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxEspecialidades
@@ -63,7 +75,7 @@
             this.groupBoxEspecialidades.Controls.Add(this.txtNumero);
             this.groupBoxEspecialidades.Controls.Add(this.lblEspecialidadNombre);
             this.groupBoxEspecialidades.Controls.Add(this.lblEspecialidadId);
-            this.groupBoxEspecialidades.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxEspecialidades.Location = new System.Drawing.Point(153, 97);
             this.groupBoxEspecialidades.Name = "groupBoxEspecialidades";
             this.groupBoxEspecialidades.Size = new System.Drawing.Size(280, 130);
             this.groupBoxEspecialidades.TabIndex = 0;
@@ -122,7 +134,7 @@
             this.groupBoxMedicos.Controls.Add(this.lblMedEspecialidad);
             this.groupBoxMedicos.Controls.Add(this.lblMedicoNombre);
             this.groupBoxMedicos.Controls.Add(this.lblMatricula);
-            this.groupBoxMedicos.Location = new System.Drawing.Point(308, 12);
+            this.groupBoxMedicos.Location = new System.Drawing.Point(157, 90);
             this.groupBoxMedicos.Name = "groupBoxMedicos";
             this.groupBoxMedicos.Size = new System.Drawing.Size(280, 170);
             this.groupBoxMedicos.TabIndex = 1;
@@ -196,12 +208,22 @@
             this.groupBoxConsulta.Controls.Add(this.dgvConsulta);
             this.groupBoxConsulta.Controls.Add(this.cmbConsulta);
             this.groupBoxConsulta.Controls.Add(this.lblConsulta);
-            this.groupBoxConsulta.Location = new System.Drawing.Point(12, 188);
+            this.groupBoxConsulta.Location = new System.Drawing.Point(6, 6);
             this.groupBoxConsulta.Name = "groupBoxConsulta";
             this.groupBoxConsulta.Size = new System.Drawing.Size(576, 313);
             this.groupBoxConsulta.TabIndex = 2;
             this.groupBoxConsulta.TabStop = false;
             this.groupBoxConsulta.Text = "Consulta por Especialidad";
+            // 
+            // btnConsultar
+            // 
+            this.btnConsultar.Location = new System.Drawing.Point(315, 20);
+            this.btnConsultar.Name = "btnConsultar";
+            this.btnConsultar.Size = new System.Drawing.Size(90, 28);
+            this.btnConsultar.TabIndex = 7;
+            this.btnConsultar.Text = "Consultar";
+            this.btnConsultar.UseVisualStyleBackColor = true;
+            this.btnConsultar.Click += new System.EventHandler(this.btnConsultar_Click);
             // 
             // dgvConsulta
             // 
@@ -253,24 +275,78 @@
             this.lblConsulta.TabIndex = 0;
             this.lblConsulta.Text = "Especialidad:";
             // 
-            // btnConsultar
+            // tcMain
             // 
-            this.btnConsultar.Location = new System.Drawing.Point(315, 20);
-            this.btnConsultar.Name = "btnConsultar";
-            this.btnConsultar.Size = new System.Drawing.Size(90, 28);
-            this.btnConsultar.TabIndex = 7;
-            this.btnConsultar.Text = "Consultar";
-            this.btnConsultar.UseVisualStyleBackColor = true;
-            this.btnConsultar.Click += new System.EventHandler(this.btnConsultar_Click);
+            this.tcMain.Controls.Add(this.tpEspecialidades);
+            this.tcMain.Controls.Add(this.tpMedicos);
+            this.tcMain.Controls.Add(this.tpConsulta);
+            this.tcMain.Location = new System.Drawing.Point(0, 1);
+            this.tcMain.Name = "tcMain";
+            this.tcMain.SelectedIndex = 0;
+            this.tcMain.Size = new System.Drawing.Size(601, 370);
+            this.tcMain.TabIndex = 3;
+            // 
+            // tpEspecialidades
+            // 
+            this.tpEspecialidades.Controls.Add(this.pbLogo);
+            this.tpEspecialidades.Controls.Add(this.groupBoxEspecialidades);
+            this.tpEspecialidades.Location = new System.Drawing.Point(4, 22);
+            this.tpEspecialidades.Name = "tpEspecialidades";
+            this.tpEspecialidades.Padding = new System.Windows.Forms.Padding(3);
+            this.tpEspecialidades.Size = new System.Drawing.Size(593, 344);
+            this.tpEspecialidades.TabIndex = 0;
+            this.tpEspecialidades.Text = "Especialidades";
+            this.tpEspecialidades.UseVisualStyleBackColor = true;
+            // 
+            // tpMedicos
+            // 
+            this.tpMedicos.Controls.Add(this.pictureBox1);
+            this.tpMedicos.Controls.Add(this.groupBoxMedicos);
+            this.tpMedicos.Location = new System.Drawing.Point(4, 22);
+            this.tpMedicos.Name = "tpMedicos";
+            this.tpMedicos.Padding = new System.Windows.Forms.Padding(3);
+            this.tpMedicos.Size = new System.Drawing.Size(593, 344);
+            this.tpMedicos.TabIndex = 1;
+            this.tpMedicos.Text = "Médicos";
+            this.tpMedicos.UseVisualStyleBackColor = true;
+            // 
+            // tpConsulta
+            // 
+            this.tpConsulta.Controls.Add(this.groupBoxConsulta);
+            this.tpConsulta.Location = new System.Drawing.Point(4, 22);
+            this.tpConsulta.Name = "tpConsulta";
+            this.tpConsulta.Padding = new System.Windows.Forms.Padding(3);
+            this.tpConsulta.Size = new System.Drawing.Size(593, 344);
+            this.tpConsulta.TabIndex = 2;
+            this.tpConsulta.Text = "Consulta";
+            this.tpConsulta.UseVisualStyleBackColor = true;
+            // 
+            // pbLogo
+            // 
+            this.pbLogo.Image = global::prySilvaER1.Properties.Resources.images__1_;
+            this.pbLogo.Location = new System.Drawing.Point(8, 6);
+            this.pbLogo.Name = "pbLogo";
+            this.pbLogo.Size = new System.Drawing.Size(577, 71);
+            this.pbLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbLogo.TabIndex = 1;
+            this.pbLogo.TabStop = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::prySilvaER1.Properties.Resources.images__1_;
+            this.pictureBox1.Location = new System.Drawing.Point(8, 6);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(577, 71);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 2;
+            this.pictureBox1.TabStop = false;
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(601, 511);
-            this.Controls.Add(this.groupBoxConsulta);
-            this.Controls.Add(this.groupBoxMedicos);
-            this.Controls.Add(this.groupBoxEspecialidades);
+            this.ClientSize = new System.Drawing.Size(601, 369);
+            this.Controls.Add(this.tcMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -283,6 +359,12 @@
             this.groupBoxConsulta.ResumeLayout(false);
             this.groupBoxConsulta.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvConsulta)).EndInit();
+            this.tcMain.ResumeLayout(false);
+            this.tpEspecialidades.ResumeLayout(false);
+            this.tpMedicos.ResumeLayout(false);
+            this.tpConsulta.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -310,6 +392,12 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn clmMatricula;
         private System.Windows.Forms.DataGridViewTextBoxColumn clmNombre;
         private System.Windows.Forms.Button btnConsultar;
+        private System.Windows.Forms.TabControl tcMain;
+        private System.Windows.Forms.TabPage tpEspecialidades;
+        private System.Windows.Forms.TabPage tpMedicos;
+        private System.Windows.Forms.TabPage tpConsulta;
+        private System.Windows.Forms.PictureBox pbLogo;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 
